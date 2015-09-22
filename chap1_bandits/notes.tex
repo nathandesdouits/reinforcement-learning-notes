@@ -1,0 +1,55 @@
+
+\section{Notes}
+
+\subsection{$n$-Armed Bandit Problem}
+
+We have $n$ different options (actions) representing $n$ different slot machines.
+Each action has a given reward, sampled from a stationary probability $q(a)$ only dependent on the chosen action $a$.
+We want to maximize the (expected) total reward over a given (large) time $T$: $\sum {t=1}^{T} R_t$.
+To do that, we estimate the value $Q_t(a)$ of each action given what we have seen so far.
+Let $R_t$ the reward at time $t$ and $N_t(a)$ the number of times the action $a$ has been chosen so far.
+
+
+\subsection{Estimating value}
+We estimate the value with:
+\[
+Q_t(a) = \frac{R_1 + ... + R_{N_{t}(a)}}{N_t(a)}
+\]
+with $Q_t(a) = Q_1(a)$ a default value.
+With $N_t(a) \rightarrow \infty$ we have $Q_t(a) \rightarrow q(a)$.
+
+Step-by-step, this can be calculated using incremental implementation to save computation time:
+\begin{align*}
+Q_{k+1} &= \frac{1}{k} \sum_{i=1}{k} R_t \\
+        & ... \\
+Q_{k+1} &= Q_k + \frac{1}{k} \left( R_k - Q_k \right)
+\end{align*}
+This looks like $\mathit{NewEstimate} \leftarrow \mathit{OldEstimate} + \mathit{StepSize} \left( \mathit{Target} - \mathit{OldEstimate} \right)$, with $\mathit{StepSize} = \frac{1}{k}$ here.
+
+For tasks that never stop this estimation diverges, plus we may be interested in tracking a nonstationary problem.
+To achieve this, we can introduce a constant step size, that effectively weights recent rewards more heavily:
+\begin{align*}
+Q_{k+1} &= Q_k + \alpha \left( R_k - Q_k \right) \\
+        & ... \\
+Q_{k+1} &= (1 - \alpha)^k Q_1 + \alpha \sum_{i=1}^k (1 - \alpha)^{k-i} R_t
+\end{align*}
+As it turns out, this defines a weighted average with weights $(1-\alpha)^k, \alpha (1-\alpha)^{k}, ..., \alpha (1-\alpha)^{k-i}$ (they sum to 1).
+
+By denoting $\alpha_k(a)$ the weight (step-size) used for the $k$-th selection of action a, we need to have two conditions:
+\begin{enumerate}
+\item $\sum_{k=1}^{\infty} \alpha_k(a) = \infty$, to guarantee that we overcome initial estimate, and
+\item $\sum_{k=1}^{\infty} \alpha_k^2(a) < \infty$, to guarantee convergence.
+\end{enumerate}
+
+
+
+\subsubsection{Chosing actions}
+To chose the action, the \textit{greedy} way is to select the one with the highest value: $A_t = \argmax_a Q_t(a)$.
+Problem: this does not spend any time to sample other actions to refine the estimates $Q_t(a)$.
+
+First solution: $\epsilon$-greedy algorithms, where $A_t = \argmax_a Q_t(a)$ $1 - \epsilon$ of the times and $A_t = uniform(a)$ the other $\epsilon$ of the times.
+
+Second solution: optimistic initial values, to preferentially select unsampled actions.
+
+
+
