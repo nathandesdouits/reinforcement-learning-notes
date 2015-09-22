@@ -51,5 +51,29 @@ First solution: $\epsilon$-greedy algorithms, where $A_t = \argmax_a Q_t(a)$ $1 
 
 Second solution: optimistic initial values, to preferentially select unsampled actions.
 
+Third solution: \textit{Upper Confidence Bound (UCB)} action selection, with
+\[
+A_t = \argmax_a \left( Q_t(a) + c \sqrt{\frac{\ln t}{N_t(a)}} \right)
+\]
+Rationale: the square-root term is a measure of the uncertainty (or variance) in the estimate of the value of $a$.
+The higher this term (and c), the higher the chance the action will be taken instead of the optimal action.
+UCB is often hard to transpose outside of the $n$-armed bandit problem.
+
+\subsubsection{Gradient bandits}
+Instead of estimating the value of each action, we can estimate the relative preference $H_t(a)$ of one action over others.
+We then compute the probability of taking action $a$ using the softmax distribution (softmax "normalizes" its inputs so that any constant added to all preferences has no effect on the probability):
+\[
+Pr(A_t = a) = \frac{e^{H_t(a)}}{\sum_{b=1}^{n}} = \pi_t(a)
+\]
+
+Initially, $H_1(a) = 0$, so every action has the same probability to be chosen.
+We then use a variation on stochastic gradient ascent to update the preference after each step ($A_t$ is the action taken at step $t$ and $R_t$ the corresponding reward):
+\begin{align*}
+H_{t+1}(A_t) &= H_t(A_t) + \alpha (R_t - \bar{R}_t) (1 - \pi_t(A_t)) \quad & \text{and} \\
+H_{t+1}(a)   &= H_t(a) + \alpha (R_t - \bar{R}_t) \pi_t(A_t) \quad & \forall a \neq A_t \\
+\end{align*}
+Explanation: if the reward ($R_t$) is better than the average reward observed thus far ($\bar{R}_t$), we increase the probability to select $A_t$ and decrease the probabilities of all other actions in proportion to that difference ($R_t - \bar{R}_t$).
+On the contrary, if the reward is lower than the current average reward, we decrease $\pi_t(A_t)$ and increase all others.
+We increase/decrease more if the selected action had lower probability (thus the $1 - \pi_t(A_t)$ term).
 
 
