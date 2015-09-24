@@ -1,7 +1,6 @@
 \section{Exercises}
 
-\subsubsection{~}
-
+\paragraph{Exercise 2.1}
 \textit{In the comparison in fig~2.1, which method will perform best in the long run in terms of cumulative reward, and cumulative probability of selecting the best action?}
 
 Because of the law of large numbers, in the long run we have $Q_t(a) \approx q(a)$ for $\epsilon$-greedy methods, since each actions will have been sampled a very large number of times.
@@ -13,19 +12,22 @@ The average reward when selecting action $A^*$ is $\mathbb{E}[q(A^*)] \approx 1.
 Meanwhile, let $Z$ be the reward when selection a random action, and $Y \sim \mathcal{N}(0,1)$ the noise term added to $q(a)$ when computing the reward.
 We have:
 \begin{align*}
-\mathbb{E}[Z] &= \mathbb{E}[\mathbb{E}[q(a)] + Y]
-              &= \mathbb{E}[q(a)] + \mathbb{E}[Y]
-              &= 0,
+\mathbb{E}[Z] &= \mathbb{E}[\mathbb{E}[q(a)] + Y] \\
+              &= \mathbb{E}[q(a)] + \mathbb{E}[Y] \\
+              &= 0
 \end{align*}
 since both random variables $q(a)$ and $Y$ follow a standard normal distribution.
 All in all, for $\epsilon$-greedy method, the average expected reward is:
 \begin{align*}
-\mathbb{E}[\bar{R}] = \epsilon \mathbb{E}[Z] + (1 - \epsilon) \mathbb{E}[q(A^*)]
-                    \approx (1 - \epsilon) \times 1.54
+\mathbb{E}[\bar{R}] &= \epsilon \mathbb{E}[Z] + (1 - \epsilon) \mathbb{E}[q(A^*)] \\
+                    &\approx (1 - \epsilon) \times 1.54 \\
 \end{align*}
 Which means 1.39 for $\epsilon = 0.1$ and 1.52 for $\epsilon = 0.01$.
 
 For the true greedy method, the first action $A^\dagger$ for which the reward gets over 0 gets chosen everytime (at first approximation).
-Thus we need to find $\mathbb{E}[q(a)| q(a) + Y > 0]$.
-I could not manage to find a seemingly correct formula unfortunately (but this one should not be too hard for a statistician), so I once again computed an estimate for this number for $n = 10$, and came up with $\approx 0.56$.
+Thus we need to find $\mathbb{E}[q(A^\dagger)] = \mathbb{E}[q(a)| q(a) + Y > 0]$.
+I could not manage to find a seemingly correct formula unfortunately (but this one should not be too hard for a statistician), so I once again computed an estimate for this number for $n = 10$, and came up with $\mathbb{E}[q(A^\dagger)] \approx 0.56$.
 This looks a bit weird since in fig~2.1 the average reward of the greedy method is around $1$.
+
+\subsubsection{Exercise 2.2}
+
