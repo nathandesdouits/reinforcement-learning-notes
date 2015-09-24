@@ -63,7 +63,7 @@ UCB is often hard to transpose outside of the $n$-armed bandit problem.
 Instead of estimating the value of each action, we can estimate the relative preference $H_t(a)$ of one action over others.
 We then compute the probability of taking action $a$ using the softmax distribution (softmax "normalizes" its inputs so that any constant added to all preferences has no effect on the probability):
 \[
-Pr(A_t = a) = \frac{e^{H_t(a)}}{\sum_{b=1}^{n}} = \pi_t(a)
+Pr(A_t = a) = \frac{e^{H_t(a)}}{\sum_{b=1}^{n} e^{H_t(b)}} = \pi_t(a)
 \]
 
 Initially, $H_1(a) = 0$, so every action has the same probability to be chosen.
