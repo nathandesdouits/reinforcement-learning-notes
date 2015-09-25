@@ -29,5 +29,38 @@ Thus we need to find $\mathbb{E}[q(A^\dagger)] = \mathbb{E}[q(a)| q(a) + Y > 0]$
 I could not manage to find a seemingly correct formula unfortunately (but this one should not be too hard for a statistician), so I once again computed an estimate for this number for $n = 10$, and came up with $\mathbb{E}[q(A^\dagger)] \approx 0.56$.
 This looks a bit weird since in fig~2.1 the average reward of the greedy method is around $1$.
 
-\subsubsection{Exercise 2.2}
+As for the cumulative probability of selecting the best action, I am unsure of what \textit{best action} actually means.
+It seems Sutton and Barto mean "action which resulted in the highest reward at time $t$" and not "best action to take to maximize the expected reward \textit{a priori}" which seems more sensible to me, as we have no mean to predict what the actual reward will be because of the noise, and thus no real interest to see which was the "true best".
+For $\epsilon$-greedy method, the probability of selecting the best action when we decided to chose a random action is obviously $\frac{1}{n}$.
+As for when we decide to chose the action with the highest estimated value, I get stuck.
+We need to find, given $Y.Z \sim \mathcal{N}(0,1)^2$, the probability $Pr{q(a) + Y > q(A^*) + Z}$.
+That honestly seems daunting to me and I would not even know where to begin...
+
+\paragraph{Exercise 2.2}
+\textit{Give pseudocode for a complete algorithm for the $n$-armed bandit problem. Use greedy action selection and incremental computation of action values with $\alpha = \frac{1}{k}$ step-size parameter. Assume a function $\mathit{bandit}(a)$ that takes an action and returns a reward. Use arrays and variables; do not subscript anything by the time index $t$. Indicate how the action values are initialized and updates after each reward. Indicate how the step-size parameters are set for each action as a function of how many times it has been tried.}
+
+\begin{enumerate}
+\item Initialization \\
+$Q(a) \leftarrow 0$ for all $a \in \mathcal{A}$ \\
+$k(a) \leftarrow 0$ for all $a \in \mathcal{A}$
+
+\item Action selection and value update \\
+Repeat \\
+\-\hspace{2em} $A \leftarrow \argmax_a Q(a)$ (resolve ties randomly) \\
+\-\hspace{2em} $R \leftarrow \mathit{bandit}(A)$ \\
+\-\hspace{2em} $Q(A) \leftarrow Q(A) + \frac{1}{k} (R - Q(A))$ \\
+\-\hspace{2em} $k(A) \leftarrow k(A) + 1$ \\
+until end of epoch
+\end{enumerate}
+
+\paragraph{Exercise 2.3}
+\textit{If the step-size parameters, $\alpha_k$, are not constant, then the estimate $Q_k$ is a weighted average of previously received rewards with a weighting different from that given by (2.6). What is the weighting on each prior reward for the general case, analogous to (2.6), in terms of $\alpha_k$?}
+
+\begin{align*}
+Q_{k+1} &= Q_k + \alpha_k (R_k - Q_k) \\
+        &= \alpha_k R_k + (1 - \alpha_k) Q_k \\
+        &= \alpha_k R_k + (1 - \alpha_k) [\alpha_{k-1} R_{k-1} + (1 - \alpha_{k-1}) Q_{k-1}] \\
+        &= \alpha_k R_k + \alpha_{k-1} (1 - \alpha_k) R_{k-1} + (1 - \alpha_{k}) (1 - \alpha_{k-1}) Q_{k-1} \\
+        &= \prod_{i=1}^k (1 - \alpha_i) Q_1 + \sum_{i=1}^k \left( \alpha_i R_i \prod_{j=i+1}^{k} (1 - \alpha_j)  \right) \\
+\end{align*}
 
