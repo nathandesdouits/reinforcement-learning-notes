@@ -61,6 +61,8 @@ Q_{k+1} &= Q_k + \alpha_k (R_k - Q_k) \\
         &= \alpha_k R_k + (1 - \alpha_k) Q_k \\
         &= \alpha_k R_k + (1 - \alpha_k) [\alpha_{k-1} R_{k-1} + (1 - \alpha_{k-1}) Q_{k-1}] \\
         &= \alpha_k R_k + \alpha_{k-1} (1 - \alpha_k) R_{k-1} + (1 - \alpha_{k}) (1 - \alpha_{k-1}) Q_{k-1} \\
-        &= \prod_{i=1}^k (1 - \alpha_i) Q_1 + \sum_{i=1}^k \left( \alpha_i R_i \prod_{j=i+1}^{k} (1 - \alpha_j)  \right) \\
+        &= Q_1 \prod_{i=1}^k (1 - \alpha_i)  + \sum_{i=1}^k \left( \alpha_i R_i \prod_{j=i+1}^{k} (1 - \alpha_j)  \right) \\
 \end{align*}
+
+The weights are then $\prod_{i=1}^k (1 - \alpha_i)$ for $Q_1$ and $\alpha_i R_i \prod_{j=i+1}^{k} (1 - \alpha_j)$ for $R_i$.
 
