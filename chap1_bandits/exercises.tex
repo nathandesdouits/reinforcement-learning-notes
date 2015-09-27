@@ -33,8 +33,8 @@ As for the cumulative probability of selecting the best action, I am unsure of w
 It seems Sutton and Barto mean "action which resulted in the highest reward at time $t$" and not "best action to take to maximize the expected reward \textit{a priori}" which seems more sensible to me, as we have no mean to predict what the actual reward will be because of the noise, and thus no real interest to see which was the "true best".
 For $\epsilon$-greedy method, the probability of selecting the best action when we decided to chose a random action is obviously $\frac{1}{n}$.
 As for when we decide to chose the action with the highest estimated value, I get stuck.
-We need to find, given $Y.Z \sim \mathcal{N}(0,1)^2$, the probability $Pr{q(a) + Y > q(A^*) + Z}$.
-That honestly seems daunting to me and I would not even know where to begin...
+We need to find, given $(Y, Z) \sim \mathcal{N}(0,1)^2$, the probability $Pr\{q(a) + Y > q(A^*) + Z\}$.
+That honestly seems daunting to me and I would not even know where to begin anyway...
 
 \paragraph{Exercise 2.2}
 \textit{Give pseudocode for a complete algorithm for the $n$-armed bandit problem. Use greedy action selection and incremental computation of action values with $\alpha = \frac{1}{k}$ step-size parameter. Assume a function $\mathit{bandit}(a)$ that takes an action and returns a reward. Use arrays and variables; do not subscript anything by the time index $t$. Indicate how the action values are initialized and updates after each reward. Indicate how the step-size parameters are set for each action as a function of how many times it has been tried.}
@@ -42,7 +42,7 @@ That honestly seems daunting to me and I would not even know where to begin...
 \begin{enumerate}
 \item Initialization \\
 $Q(a) \leftarrow 0$ for all $a \in \mathcal{A}$ \\
-$k(a) \leftarrow 0$ for all $a \in \mathcal{A}$
+$k(a) \leftarrow 1$ for all $a \in \mathcal{A}$
 
 \item Action selection and value update \\
 Repeat \\
@@ -66,3 +66,7 @@ Q_{k+1} &= Q_k + \alpha_k (R_k - Q_k) \\
 
 The weights are then $\prod_{i=1}^k (1 - \alpha_i)$ for $Q_1$ and $\alpha_i R_i \prod_{j=i+1}^{k} (1 - \alpha_j)$ for $R_i$.
 
+\paragraph{Exercise 2.4 (programming experiment)}
+\textit{TODO}
+
+\textit{See file exercise\_2\_4.py for the python code.}
