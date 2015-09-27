@@ -29,12 +29,12 @@ Thus we need to find $\mathbb{E}[q(A^\dagger)] = \mathbb{E}[q(a)| q(a) + Y > 0]$
 I could not manage to find a seemingly correct formula unfortunately (but this one should not be too hard for a statistician), so I once again computed an estimate for this number for $n = 10$, and came up with $\mathbb{E}[q(A^\dagger)] \approx 0.56$.
 This looks a bit weird since in fig~2.1 the average reward of the greedy method is around $1$.
 
-As for the cumulative probability of selecting the best action, I am unsure of what \textit{best action} actually means.
-It seems Sutton and Barto mean "action which resulted in the highest reward at time $t$" and not "best action to take to maximize the expected reward \textit{a priori}" which seems more sensible to me, as we have no mean to predict what the actual reward will be because of the noise, and thus no real interest to see which was the "true best".
 For $\epsilon$-greedy method, the probability of selecting the best action when we decided to chose a random action is obviously $\frac{1}{n}$.
 As for when we decide to chose the action with the highest estimated value, I get stuck.
 We need to find, given $(Y, Z) \sim \mathcal{N}(0,1)^2$, the probability $Pr\{q(a) + Y > q(A^*) + Z\}$.
 That honestly seems daunting to me and I would not even know where to begin anyway...
+Graphically, the curve seems to plateau at around 80\% for $\epsilon = 0.1$, and should be plateauing over this value for $\epsilon = 0.01$.
+Same for the greedy method, which seems to plateau at around 35\%.
 
 \paragraph{Exercise 2.2}
 \textit{Give pseudocode for a complete algorithm for the $n$-armed bandit problem. Use greedy action selection and incremental computation of action values with $\alpha = \frac{1}{k}$ step-size parameter. Assume a function $\mathit{bandit}(a)$ that takes an action and returns a reward. Use arrays and variables; do not subscript anything by the time index $t$. Indicate how the action values are initialized and updates after each reward. Indicate how the step-size parameters are set for each action as a function of how many times it has been tried.}
@@ -67,6 +67,22 @@ Q_{k+1} &= Q_k + \alpha_k (R_k - Q_k) \\
 The weights are then $\prod_{i=1}^k (1 - \alpha_i)$ for $Q_1$ and $\alpha_i R_i \prod_{j=i+1}^{k} (1 - \alpha_j)$ for $R_i$.
 
 \paragraph{Exercise 2.4 (programming experiment)}
-\textit{TODO}
+\textit{Design and conduct an experiment to demonstrate the difficulties that sample-average methods have for nonstationary problems. Use a modified version of the 10-armed testbed in which all the q(a) start out equal and then take independent random walks. Prepare plots like Figure 2.1 for an action-value method using sample averages, incrementally computed by $\alpha = \frac{1}{k}$, and another action-value method using a constant step-size parameter, $\alpha = 0.1$. Use $\epsilon = 0.1$ and, if necessary, runs longer than 1000 plays.}
 
-\textit{See file exercise\_2\_4.py for the python code.}
+See file \textit{exercise\_2\_4.py} for the Python code.
+The code is composed with 3 classes (2 for bandit problem definition, Bandit and DriftBandit, and 1 for a general action-value method, EpsGreedyLearner) and 2 functions (run\_drift and experiments) to conduct the experiment.
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=0.47\columnwidth]{chap1_bandits/plot_rewards.png}
+\includegraphics[width=0.47\columnwidth]{chap1_bandits/plot_bestaction.png}
+\caption{\label{chap1_fig_ex24}
+Left: average rewards (blue: $\alpha = \frac{1}{k}$, green: $\alpha = 0.1$, red: green/blue).
+Right: probability of selecting the best action (blue: $\alpha = \frac{1}{k}$, green: $\alpha = 0.1$).
+}
+\end{figure}
+
+Figure~\ref{chap1_fig_ex24}.left shows that a fixed step-size consistently outperforms the "average" step-size.
+Figure~\ref{chap1_fig_ex24}.right clearly shows the difficulty of the action-value method to track a non-stationnary problem.
+Indeed, the Figure 2.1 in the original manuscript reports probabilities of selecting the best action to be around 80\% in the long-run for $\epsilon = 0.1$.
+For the same $\epsilon$ value, this method only reports probabilities of 50-60\% -- although this number could still increase with a higher number of time steps.

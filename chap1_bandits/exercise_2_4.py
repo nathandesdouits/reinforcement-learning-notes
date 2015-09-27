@@ -106,7 +106,7 @@ def run_drift(T=2000, eps=0.1, initval=0., stepsize='average'):
 def experiments(n, T=2000, eps=0.1, initval=0., stepsize='average'):
     rewds, isb = [], []
     for i in xrange(n):
-        actions, rewards, isbest = experiment(T=T, eps=eps, initval=initval, stepsize=stepsize)
+        actions, rewards, isbest = run_drift(T=T, eps=eps, initval=initval, stepsize=stepsize)
         rewds.append(rewards)
         isb.append(isbest)
     return numpy.asarray(rewds).mean(axis=0), numpy.asarray(isb).mean(axis=0)
