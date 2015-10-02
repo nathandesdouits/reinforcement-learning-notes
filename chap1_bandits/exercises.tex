@@ -99,4 +99,21 @@ The probability of selecting the best action at $t = n+1$ is thus equal to the p
 The same is true for $2n+1$, but to a lesser extent since it is possible that the noise and/or the relative values of $q(a)$ cause the optimal action to be over- or under-sampled.
 Rapidly, the noise smooths out this behavior.
 
+\paragraph{Exercise 2.6}
+\textit{Suppose you face a binary bandit task whose true action values
+change randomly from play to play. Specifically, suppose that for any play the
+true values of actions 1 and 2 are respectively 0.1 and 0.2 with probability 0.5
+(case A), and 0.9 and 0.8 with probability 0.5 (case B). If you are not able to
+tell which case you face at any play, what is the best expectation of success
+you can achieve and how should you behave to achieve it? Now suppose that
+on each play you are told if you are facing case A or case B (although you still
+don’t know the true action values). This is an associative search task. What
+is the best expectation of success you can achieve in this task, and how should
+you behave to achieve it?}
 
+In the case where it is not possible to know which case we face, we have $\mathbb{E}[R|A=1] = \mathbb{E}[R|A=1,case=A]p(case=A) + \mathbb{E}[R|A=1,case=B]p(case=B) = 0.1 \times 0.5 + 0.9 \times 0.5 = 0.5$ and $\mathbb{E}[R|A=2] = 0.5$ too.
+So expectation of success is the same no matter what action is chosen and equals 0.5.
+
+Conversely, in the case where it is possible to know the case we face, we can store the estimate of each action for each case separately.
+We can use any of the tools described in this chapter to learn these estimated values.
+In the end, the best expectation of success should be $0.2 \times 0.5 + 0.9 \times 0.5 = 0.55$.
